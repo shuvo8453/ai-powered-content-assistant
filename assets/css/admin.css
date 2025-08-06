@@ -1,0 +1,6 @@
+.bootstrap-wrapper .card {
+    border-radius: 10px;
+}
+.bootstrap-wrapper textarea {
+    resize: vertical;
+}
