@@ -6,3 +6,26 @@
  * Author:      Saiful Islam Shuvo
  * Text Domain: ai-powered-content-assistant
  */
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+require_once __DIR__ . '/includes/traits/trait-singleton.php';
+
+// Autoload classes
+spl_autoload_register( function( $class ) {
+    $prefix = 'AIPoweredContentAssistant\\';
+    $base_dir = __DIR__ . '/includes/';
+
+    if ( strpos( $class, $prefix ) === 0 ) {
+        $relative_class = substr( $class, strlen( $prefix ) );
+        $file = $base_dir . 'class-' . strtolower( str_replace( '_', '-', $relative_class ) ) . '.php';
+        if ( file_exists( $file ) ) {
+            require $file;
+        }
+    }
+} );
+
+// Initialize main plugin
+add_action( 'plugins_loaded', function() {
+    \AIPoweredContentAssistant\Plugin::get_instance();
+});
