@@ -4,3 +4,33 @@
 .bootstrap-wrapper textarea {
     resize: vertical;
 }
+
+/* blog content prompt design */
+.aipca-outline {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    line-height: 1.6;
+    color: #1e1e1e;
+}
+.aipca-outline h3 {
+    color: #1d2327;
+    font-size: 1.3em;
+    margin: 1.5em 0 0.8em;
+    padding-bottom: 3px;
+    border-bottom: 1px solid #dcdcde;
+}
+.aipca-outline h4 {
+    color: #1d2327;
+    font-size: 1.1em;
+    margin: 1.2em 0 0.6em;
+}
+.aipca-outline ul {
+    margin-left: 20px;
+    padding-left: 0;
+    list-style-type: disc;
+}
+.aipca-outline li {
+    margin-bottom: 6px;
+}
+.aipca-outline p {
+    margin: 0.8em 0;
+}

@@ -90,11 +90,27 @@ class Content_Generator {
             wp_send_json_error( [ 'message' => $outline->get_error_message() ] );
         }
 
-        wp_send_json_success( [ 'content' => wpautop( esc_html( $outline ) ) ] );
+       wp_send_json_success( [ 'content' => wp_kses_post( $outline ) ] );
     }
 
     public function generate_outline( $topic ) {
-        $prompt = "Generate a detailed blog post outline with headings and subheadings for the topic: {$topic}";
-        return Gemini_API::get_instance()->request( $prompt, 800 );
+        $prompt = "Generate a detailed blog post outline with headings and subheadings for the topic: {$topic}. 
+        Format the response with HTML tags: 
+        - Use <h3> for main sections 
+        - Use <h4> for subsections 
+        - Use <ul><li> for bullet points 
+        - Wrap the entire response in <div class='aipca-outline'>";
+        
+        $outline = Gemini_API::get_instance()->request( $prompt, 800 );
+
+        $outline = preg_replace('/^```html|```$/m', '', $outline);
+        
+        // Ensure we have proper HTML structure
+        if ( ! preg_match( '/<h[1-6]>/i', $outline ) ) {
+            $outline = nl2br( $outline ); // Fallback for plain text
+            $outline = "<div class='aipca-outline'><h3>Outline</h3>{$outline}</div>";
+        }
+        
+        return $outline;
     }
 }
