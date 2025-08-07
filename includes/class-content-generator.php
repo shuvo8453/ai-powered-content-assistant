@@ -56,10 +56,20 @@ class Content_Generator {
                             <button type="button" class="btn btn-outline-warning btn-sm" id="aipca-outline-remake" title="Remake Outline">♻</button>
                             <button type="button" class="btn btn-outline-success btn-sm" id="aipca-outline-to-full" title="Create Full Post">✍</button>
                             <button type="button" class="btn btn-outline-secondary btn-sm" id="aipca-outline-copy" title="Copy">📋</button>
-                            <button type="button" class="border btn-close mt-0" data-bs-dismiss="modal"></button>
+                            <button type="button" class="border btn-close mt-0" data-bs-dismiss="modal" id="aipca-modal-remove"></button>
                         </div>
                     </div>
-                <div class="modal-body" id="aipca-outline-content"></div>
+
+                    <div class="modal-body position-relative" id="aipca-outline-body">
+                        <div id="aipca-outline-loader" class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75 d-none" style="z-index: 10;">
+                            <div class="text-center">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <p class="mt-2">Regenerating outline...</p>
+                            </div>
+                        </div>
+
+                        <div id="aipca-outline-content"></div>
+                    </div>
                 </div>
             </div>
         </div>

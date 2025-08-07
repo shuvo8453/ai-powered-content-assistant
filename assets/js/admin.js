@@ -23,6 +23,7 @@ jQuery(function($) {
             $('#aipca-loader').hide();
             if (res.success) {
                 $('#aipca-outline-content').html(res.data.content);
+                $('#aipca-outline-loader').hide(); // 💡 hide modal overlay loader just in case
                 new bootstrap.Modal('#aipcaOutlineModal').show();
             } else {
                 alert(res.data.message || 'Error generating outline.');
@@ -34,18 +35,41 @@ jQuery(function($) {
     });
 
     // Remake outline
-    $('#aipca-outline-remake').on('click', function() {
+    $('#aipca-outline-remake').on('click', function () {
         if (!currentTopic) return;
-        $('#aipca-loader').show();
+
+        // Show overlay loader and disable buttons
+        $('#aipca-outline-loader').removeClass('d-none');
+        $('#aipca-outline-remake').prop('disabled', true);
+        $('#aipca-outline-to-full').prop('disabled', true);
+        $('#aipca-outline-copy').prop('disabled', true);
+        $('#aipca-modal-remove').prop('disabled', true);
+
         $.post(AIPCA_Vars.ajax_url, {
             action: 'aipca_generate_outline',
             security: AIPCA_Vars.nonce,
             topic: currentTopic
-        }, function(res) {
-            $('#aipca-loader').hide();
+        }, function (res) {
+            $('#aipca-outline-loader').hide();
+
+            $('#aipca-outline-remake').prop('disabled', false);
+            $('#aipca-outline-to-full').prop('disabled', false);
+            $('#aipca-outline-copy').prop('disabled', false);
+            $('#aipca-modal-remove').prop('disabled', false);
+
             if (res.success) {
+                $('#aipca-outline-loader').addClass('d-none');
                 $('#aipca-outline-content').html(res.data.content);
+            } else {
+                alert(res.data.message || 'Error regenerating outline.');
             }
+        }).fail(() => {
+            $('#aipca-outline-loader').hide();
+            $('#aipca-outline-remake').prop('disabled', false);
+            $('#aipca-outline-to-full').prop('disabled', false);
+            $('#aipca-outline-copy').prop('disabled', false);
+            $('#aipca-modal-remove').prop('disabled', false);
+            alert('Something went wrong.');
         });
     });
 
@@ -58,5 +82,10 @@ jQuery(function($) {
     // Create full post from outline
     $('#aipca-outline-to-full').on('click', function() {
         alert('Full post generation from outline will go here.');
+    });
+
+    // remove modal and clear input field
+    $('#aipca-modal-remove').on('click', function() {
+        currentTopic.val('');
     });
 });
