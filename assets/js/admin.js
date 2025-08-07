@@ -86,6 +86,7 @@ jQuery(function($) {
 
     // remove modal and clear input field
     $('#aipca-modal-remove').on('click', function() {
-        currentTopic.val('');
+        $('#blog_topic').val(''); // clear the input
+        currentTopic = ''; // reset the internal topic too
     });
 });
