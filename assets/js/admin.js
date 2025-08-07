@@ -89,4 +89,34 @@ jQuery(function($) {
         $('#blog_topic').val(''); // clear the input
         currentTopic = ''; // reset the internal topic too
     });
+
+    // Create full post from outline
+    $('#btn-generate-full').on('click', function() {
+        let topic = $('#blog_topic').val().trim();
+        if (!topic) {
+            alert('Please enter a blog topic.');
+            return;
+        }
+
+        currentTopic = topic;
+        $('#aipca-loader').show();
+
+        $.post(AIPCA_Vars.ajax_url, {
+            action: 'aipca_generate_full_post',
+            security: AIPCA_Vars.nonce,
+            topic: topic
+        }, function(res) {
+            $('#aipca-loader').hide();
+            if (res.success) {
+                $('#aipca-outline-content').html(res.data.content);
+                $('#aipca-outline-loader').hide();
+                new bootstrap.Modal('#aipcaOutlineModal').show();
+            } else {
+                alert(res.data.message || 'Error generating full post.');
+            }
+        }).fail(() => {
+            $('#aipca-loader').hide();
+            alert('Something went wrong.');
+        });
+    });
 });

@@ -8,6 +8,7 @@ class Content_Generator {
 
     public function __construct() {
         add_action( 'wp_ajax_aipca_generate_outline', [ $this, 'ajax_generate_outline' ] );
+        add_action( 'wp_ajax_aipca_generate_full_post', [ $this, 'ajax_generate_full_post' ] );
     }
 
     public function render_page() {
@@ -118,6 +119,52 @@ class Content_Generator {
         }
 
         return $outline;
+    }
+
+    public function ajax_generate_full_post() {
+        check_ajax_referer( 'aipca_nonce', 'security' );
+
+        $topic = sanitize_text_field( $_POST['topic'] ?? '' );
+        if ( empty( $topic ) ) {
+            wp_send_json_error( [ 'message' => 'Please enter a topic.' ] );
+        }
+
+        $content = $this->generate_full_post( $topic );
+
+        if ( is_wp_error( $content ) ) {
+            wp_send_json_error( [ 'message' => $content->get_error_message() ] );
+        }
+
+        wp_send_json_success( [ 'content' => wp_kses_post( $content ) ] );
+    }
+
+    public function generate_full_post( $topic ) {
+        $prompt = "Write a complete, high-quality blog post on the topic: \"{$topic}\". 
+        The structure should include an introduction, several sections with headings and subheadings, and a conclusion. 
+        Use HTML formatting:
+        - <h2> for main headings
+        - <h3> for subheadings
+        - <p> for paragraphs
+        - <strong> or <ul><li> where appropriate
+        Wrap everything in: <div class='aipca-full-post'>...</div>";
+
+        $content = Gemini_API::get_instance()->request( $prompt, 1500 );
+
+        // Validate the response
+        if ( empty( $content ) || ! is_string( $content ) ) {
+            return new \WP_Error( 'empty_response', 'Failed to generate blog post. Please try again.' );
+        }
+
+        // Clean Markdown-style code fences
+        $content = preg_replace( '/^```html|```$/m', '', $content );
+
+        // Fallback if the content doesn't include expected HTML
+        if ( ! preg_match( '/<h[1-6]>/i', $content ) ) {
+            $content = nl2br( esc_html( $content ) ); // Escape just in case
+            $content = "<div class='aipca-full-post'><h2>Blog Post</h2>{$content}</div>";
+        }
+
+        return $content;
     }
 
 }
