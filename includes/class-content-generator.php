@@ -100,17 +100,24 @@ class Content_Generator {
         - Use <h4> for subsections 
         - Use <ul><li> for bullet points 
         - Wrap the entire response in <div class='aipca-outline'>";
-        
+
         $outline = Gemini_API::get_instance()->request( $prompt, 800 );
 
-        $outline = preg_replace('/^```html|```$/m', '', $outline);
-        
-        // Ensure we have proper HTML structure
+        // Basic check: if API returned empty or failed
+        if ( empty( $outline ) || ! is_string( $outline ) ) {
+            return new \WP_Error( 'empty_response', 'Failed to generate outline. Please try again.' );
+        }
+
+        // Clean Markdown-style code fences
+        $outline = preg_replace( '/^```html|```$/m', '', $outline );
+
+        // Fallback if the outline doesn’t contain expected HTML structure
         if ( ! preg_match( '/<h[1-6]>/i', $outline ) ) {
-            $outline = nl2br( $outline ); // Fallback for plain text
+            $outline = nl2br( esc_html( $outline ) ); // Escape just in case
             $outline = "<div class='aipca-outline'><h3>Outline</h3>{$outline}</div>";
         }
-        
+
         return $outline;
     }
+
 }
