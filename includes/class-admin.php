@@ -17,38 +17,10 @@ class Admin {
             __( 'AI Assistant', 'ai-powered-content-assistant' ),
             'manage_options',
             'ai-content-assistant',
-            [ $this, 'render_admin_page' ],
+            [ Content_Generator::get_instance(), 'render_page' ],
             'dashicons-edit',
             20
         );
-    }
-
-    public function render_admin_page() {
-    ?>
-        <div class="wrap bootstrap-wrapper">
-            <div class="container my-4">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><?php esc_html_e( 'AI-Powered Content Assistant', 'ai-powered-content-assistant' ); ?></h4>
-                    </div>
-                    <div class="card-body">
-                        <form method="post" action="">
-                            <?php wp_nonce_field( 'aipca_generate_content', 'aipca_nonce' ); ?>
-
-                            <div class="mb-3">
-                                <label for="blog_topic" class="form-label fw-bold"><?php esc_html_e( 'Blog Topic', 'ai-powered-content-assistant' ); ?></label>
-                                <textarea name="blog_topic" id="blog_topic" rows="3" class="form-control" placeholder="<?php esc_attr_e( 'Enter your blog topic...', 'ai-powered-content-assistant' ); ?>"></textarea>
-                            </div>
-
-                            <button type="submit" class="btn btn-success">
-                                <i class="dashicons dashicons-edit"></i> <?php esc_html_e( 'Generate Outline', 'ai-powered-content-assistant' ); ?>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php
     }
 
     public function enqueue_assets( $hook ) {

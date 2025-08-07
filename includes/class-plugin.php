@@ -9,6 +9,7 @@ class Plugin {
     public function __construct() {
         $this->define_constants();
         $this->init_hooks();
+        Content_Generator::get_instance();
     }
 
     private function define_constants() {

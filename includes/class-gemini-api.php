@@ -6,10 +6,10 @@ use AIPoweredContentAssistant\Traits\Singleton;
 class Gemini_API {
     use Singleton;
 
-    private $api_key = '';
+    private $api_key;
 
     public function __construct() {
-        $this->api_key = get_option( 'aipca_gemini_api_key', '' );
+        $this->api_key = get_option( 'aipca_gemini_api_key', 'AIzaSyBQoFwXH4TSKpyjxpWfgPI9L3WfHornvF4' );
     }
 
     public function request( $prompt, $max_tokens = 800 ) {
@@ -17,7 +17,7 @@ class Gemini_API {
             return new \WP_Error( 'no_api_key', __( 'Gemini API key not set.', 'ai-powered-content-assistant' ) );
         }
 
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={$this->api_key}";
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={$this->api_key}";
 
         $body = [
             'contents' => [[ 'parts' => [[ 'text' => $prompt ]] ]]
