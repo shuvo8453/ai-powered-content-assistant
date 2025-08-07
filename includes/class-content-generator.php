@@ -9,6 +9,7 @@ class Content_Generator {
     public function __construct() {
         add_action( 'wp_ajax_aipca_generate_outline', [ $this, 'ajax_generate_outline' ] );
         add_action( 'wp_ajax_aipca_generate_full_post', [ $this, 'ajax_generate_full_post' ] );
+        add_action( 'wp_ajax_aipca_download_docx', [ $this, 'ajax_download_docx' ] );
     }
 
     public function render_page() {
@@ -74,6 +75,32 @@ class Content_Generator {
                 </div>
             </div>
         </div>
+
+        <!-- Full Post Modal -->
+        <div class="modal fade" id="aipcaFullPostModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><?php esc_html_e('Generated Full Post', 'ai-powered-content-assistant'); ?></h5>
+                        <div class="ms-auto d-flex gap-2">
+                            <button type="button" class="btn btn-outline-success btn-sm" id="aipca-full-download" title="Download as DOCX">⬇ .docx</button>
+                            <button type="button" class="border btn-close mt-0" data-bs-dismiss="modal" id="aipca-modal-full-close"></button>
+                        </div>
+                    </div>
+
+                    <div class="modal-body position-relative" id="aipca-full-body">
+                        <div id="aipca-full-loader" class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75 d-none" style="z-index: 10;">
+                            <div class="text-center">
+                                <div class="spinner-border text-primary" role="status"></div>
+                                <p class="mt-2">Generating full post...</p>
+                            </div>
+                        </div>
+
+                        <div id="aipca-full-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <?php
     }
     
@@ -129,13 +156,23 @@ class Content_Generator {
             wp_send_json_error( [ 'message' => 'Please enter a topic.' ] );
         }
 
-        $content = $this->generate_full_post( $topic );
+        $prompt = "Write a full, detailed blog post for the topic: {$topic}. 
+        Use HTML formatting: 
+        - Use <h2> for section titles
+        - Use <p> for paragraphs
+        - Use <ul><li> for lists
+        - Wrap the entire response in <div class='aipca-full-post'>";
 
-        if ( is_wp_error( $content ) ) {
-            wp_send_json_error( [ 'message' => $content->get_error_message() ] );
+        $post = Gemini_API::get_instance()->request( $prompt, 1500 );
+
+        $post = preg_replace('/^```html|```$/m', '', $post);
+
+        if ( ! preg_match( '/<h[1-6]>/i', $post ) ) {
+            $post = nl2br( $post ); // fallback
+            $post = "<div class='aipca-full-post'><h2>Blog Post</h2>{$post}</div>";
         }
 
-        wp_send_json_success( [ 'content' => wp_kses_post( $content ) ] );
+        wp_send_json_success( [ 'content' => wp_kses_post( $post ) ] );
     }
 
     public function generate_full_post( $topic ) {
@@ -165,6 +202,27 @@ class Content_Generator {
         }
 
         return $content;
+    }
+
+    public function ajax_download_docx() {
+        check_ajax_referer( 'aipca_nonce', 'security' );
+
+        $html = $_POST['html'] ?? '';
+        if ( empty( $html ) ) {
+            wp_die( 'No content provided.' );
+        }
+
+        // Convert HTML to simple Word-compatible format
+        $html = wp_kses_post( $html );
+
+        // Use basic .docx headers for download
+        header("Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        header("Content-Disposition: attachment; filename=blog-post.doc");
+        header("Cache-Control: no-cache");
+        header("Pragma: no-cache");
+
+        echo '<html><body>' . $html . '</body></html>';
+        exit;
     }
 
 }

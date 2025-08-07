@@ -90,33 +90,54 @@ jQuery(function($) {
         currentTopic = ''; // reset the internal topic too
     });
 
-    // Create full post from outline
-    $('#btn-generate-full').on('click', function() {
+    // Generate full post
+    $('#btn-generate-full').on('click', function () {
         let topic = $('#blog_topic').val().trim();
         if (!topic) {
             alert('Please enter a blog topic.');
             return;
         }
 
-        currentTopic = topic;
         $('#aipca-loader').show();
 
         $.post(AIPCA_Vars.ajax_url, {
             action: 'aipca_generate_full_post',
             security: AIPCA_Vars.nonce,
             topic: topic
-        }, function(res) {
+        }, function (res) {
             $('#aipca-loader').hide();
+            // $('#aipca-full-loader').addClass('d-none');
+
             if (res.success) {
-                $('#aipca-outline-content').html(res.data.content);
-                $('#aipca-outline-loader').hide();
-                new bootstrap.Modal('#aipcaOutlineModal').show();
+                $('#aipcaFullPostModal').modal('show');
+                $('#aipca-full-content').html(res.data.content);
             } else {
-                alert(res.data.message || 'Error generating full post.');
+                $('#aipca-full-content').html(`<div class="alert alert-danger">${res.data.message || 'Error generating post.'}</div>`);
             }
         }).fail(() => {
             $('#aipca-loader').hide();
-            alert('Something went wrong.');
+            // $('#aipca-full-loader').addClass('d-none');
+            $('#aipca-full-content').html('<div class="alert alert-danger">Something went wrong.</div>');
         });
     });
+
+    // Download full post as .docx
+    $('#aipca-full-download').on('click', function () {
+        const postHtml = $('#aipca-full-content').html();
+
+        const form = $('<form>', {
+            method: 'POST',
+            action: AIPCA_Vars.ajax_url,
+            target: '_blank'
+        });
+
+        form.append($('<input>', { type: 'hidden', name: 'action', value: 'aipca_download_docx' }));
+        form.append($('<input>', { type: 'hidden', name: 'security', value: AIPCA_Vars.nonce }));
+        form.append($('<input>', { type: 'hidden', name: 'html', value: postHtml }));
+
+        $('body').append(form);
+        form.submit();
+        form.remove();
+    });
+
 });
