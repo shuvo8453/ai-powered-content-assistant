@@ -1,6 +1,248 @@
-.bootstrap-wrapper .card {
-    border-radius: 10px;
+/* Enhanced Modern Design */
+.bootstrap-wrapper {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
 }
+
+.aipca-main-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.aipca-hero-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.aipca-hero-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.aipca-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.aipca-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.05) 10px,
+        rgba(255, 255, 255, 0.05) 20px
+    );
+    animation: aipca-shimmer 20s linear infinite;
+}
+
+@keyframes aipca-shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.aipca-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    position: relative;
+    z-index: 2;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.aipca-subtitle {
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 2;
+}
+
+.aipca-form-container {
+    padding: 3rem 2rem;
+    background: white;
+}
+
+.aipca-form-group {
+    margin-bottom: 2rem;
+}
+
+.aipca-label {
+    display: block;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.aipca-textarea {
+    width: 100%;
+    padding: 1.2rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    line-height: 1.5;
+    transition: all 0.3s ease;
+    resize: vertical;
+    min-height: 120px;
+    background: #fafafa;
+}
+
+.aipca-textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+.aipca-button-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.aipca-btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    min-width: 200px;
+    justify-content: center;
+}
+
+.aipca-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.aipca-btn:hover::before {
+    left: 100%;
+}
+
+.aipca-btn-outline {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.aipca-btn-outline:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.aipca-btn-success {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: white;
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+}
+
+.aipca-btn-success:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+}
+
+.aipca-loader-container {
+    text-align: center;
+    padding: 2rem;
+}
+
+.aipca-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f4f6;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: aipca-spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes aipca-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.aipca-loader-text {
+    color: #667eea;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Modal Enhancements */
+.modal-content {
+    border-radius: 20px;
+    border: none;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-bottom: none;
+    padding: 1.5rem 2rem;
+}
+
+.modal-title {
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.aipca-modal-btn {
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.aipca-modal-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.modal-body {
+    padding: 2rem;
+    background: #fafafa;
+}
+
+/* Content Styling */
+.bootstrap-wrapper .card {
+    border-radius: 20px;
+}
+
 .bootstrap-wrapper textarea {
     resize: vertical;
 }
@@ -10,52 +252,115 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     line-height: 1.6;
     color: #1e1e1e;
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
+
 .aipca-outline h3 {
-    color: #1d2327;
+    color: #667eea;
     font-size: 1.3em;
     margin: 1.5em 0 0.8em;
-    padding-bottom: 3px;
-    border-bottom: 1px solid #dcdcde;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e2e8f0;
 }
+
 .aipca-outline h4 {
-    color: #1d2327;
+    color: #2d3748;
     font-size: 1.1em;
     margin: 1.2em 0 0.6em;
 }
+
 .aipca-outline ul {
     margin-left: 20px;
     padding-left: 0;
-    list-style-type: disc;
+    list-style-type: none;
 }
+
 .aipca-outline li {
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 1.5rem;
 }
+
+.aipca-outline li::before {
+    content: '✦';
+    position: absolute;
+    left: 0;
+    color: #667eea;
+    font-weight: bold;
+}
+
 .aipca-outline p {
     margin: 0.8em 0;
 }
 
 /* full post related css */
-
 .aipca-full-post {
     font-family: inherit;
     line-height: 1.7;
     color: #212529;
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
+
 .aipca-full-post h2 {
     font-size: 1.5em;
     margin: 1.5em 0 0.5em;
-    color: #0d6efd;
+    color: #667eea;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
 }
+
 .aipca-full-post h3 {
     font-size: 1.2em;
     margin: 1.2em 0 0.4em;
-    color: #333;
+    color: #2d3748;
 }
+
 .aipca-full-post p {
     margin-bottom: 1em;
 }
+
 .aipca-full-post ul {
     margin-left: 20px;
-    list-style-type: disc;
+    list-style-type: none;
+}
+
+.aipca-full-post li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.aipca-full-post li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: #667eea;
+    font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .aipca-title {
+        font-size: 2rem;
+    }
+    
+    .aipca-button-group {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .aipca-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .aipca-form-container {
+        padding: 2rem 1.5rem;
+    }
 }

@@ -15,33 +15,43 @@ class Content_Generator {
     public function render_page() {
         ?>
         <div class="wrap bootstrap-wrapper">
-            <div class="container my-4">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><?php esc_html_e( 'AI-Powered Content Assistant', 'ai-powered-content-assistant' ); ?></h4>
+            <div class="aipca-main-container">
+                <div class="aipca-hero-card">
+                    <div class="aipca-header">
+                        <h1 class="aipca-title">✨ AI Content Assistant</h1>
+                        <p class="aipca-subtitle">Generate professional blog content with the power of AI</p>
                     </div>
-                    <div class="card-body">
+                    
+                    <div class="aipca-form-container">
                         <form id="aipca-blog-form">
                             <?php wp_nonce_field( 'aipca_generate_content', 'aipca_nonce' ); ?>
 
-                            <div class="mb-3">
-                                <label for="blog_topic" class="form-label fw-bold"><?php esc_html_e( 'Blog Topic', 'ai-powered-content-assistant' ); ?></label>
-                                <textarea name="blog_topic" id="blog_topic" rows="3" class="form-control" placeholder="<?php esc_attr_e( 'Enter your blog topic...', 'ai-powered-content-assistant' ); ?>"></textarea>
+                            <div class="aipca-form-group">
+                                <label for="blog_topic" class="aipca-label">
+                                    🎯 <?php esc_html_e( 'What would you like to write about?', 'ai-powered-content-assistant' ); ?>
+                                </label>
+                                <textarea 
+                                    name="blog_topic" 
+                                    id="blog_topic" 
+                                    rows="4" 
+                                    class="aipca-textarea" 
+                                    placeholder="<?php esc_attr_e( 'Describe your blog topic in detail. The more specific you are, the better content we can generate for you...', 'ai-powered-content-assistant' ); ?>">
+                                </textarea>
                             </div>
 
-                            <div class="d-flex gap-2">
-                                <button type="button" id="btn-generate-outline" class="btn btn-outline-primary">
+                            <div class="aipca-button-group">
+                                <button type="button" id="btn-generate-outline" class="aipca-btn aipca-btn-outline">
                                     📝 <?php esc_html_e('Generate Post Outline', 'ai-powered-content-assistant'); ?>
                                 </button>
-                                <button type="button" id="btn-generate-full" class="btn btn-outline-success">
-                                    📄 <?php esc_html_e('Generate Full Post', 'ai-powered-content-assistant'); ?>
+                                <button type="button" id="btn-generate-full" class="aipca-btn aipca-btn-success">
+                                    🚀 <?php esc_html_e('Generate Full Post', 'ai-powered-content-assistant'); ?>
                                 </button>
                             </div>
                         </form>
 
-                        <div id="aipca-loader" class="text-center mt-3" style="display:none;">
-                            <div class="spinner-border text-primary" role="status"></div>
-                            <p class="mt-2"><?php esc_html_e( 'Generating content, please wait...', 'ai-powered-content-assistant' ); ?></p>
+                        <div id="aipca-loader" class="aipca-loader-container" style="display:none;">
+                            <div class="aipca-spinner"></div>
+                            <p class="aipca-loader-text"><?php esc_html_e( 'Creating amazing content for you...', 'ai-powered-content-assistant' ); ?></p>
                         </div>
                     </div>
                 </div>
@@ -53,20 +63,20 @@ class Content_Generator {
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title"><?php esc_html_e('Generated Outline', 'ai-powered-content-assistant'); ?></h5>
+                        <h5 class="modal-title">📋 <?php esc_html_e('Generated Outline', 'ai-powered-content-assistant'); ?></h5>
                         <div class="ms-auto d-flex gap-2">
-                            <button type="button" class="btn btn-outline-warning btn-sm" id="aipca-outline-remake" title="Remake Outline">♻</button>
-                            <button type="button" class="btn btn-outline-success btn-sm" id="aipca-outline-to-full" title="Create Full Post">✍</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" id="aipca-outline-copy" title="Copy">📋</button>
-                            <button type="button" class="border btn-close mt-0" data-bs-dismiss="modal" id="aipca-modal-remove"></button>
+                            <button type="button" class="aipca-modal-btn" id="aipca-outline-remake" title="Remake Outline">♻ Remake</button>
+                            <button type="button" class="aipca-modal-btn" id="aipca-outline-to-full" title="Create Full Post">✍ Create Post</button>
+                            <button type="button" class="aipca-modal-btn" id="aipca-outline-copy" title="Copy">📋 Copy</button>
+                            <button type="button" class="btn-close btn-close-white mt-1 border" data-bs-dismiss="modal" id="aipca-modal-remove"></button>
                         </div>
                     </div>
 
                     <div class="modal-body position-relative" id="aipca-outline-body">
-                        <div id="aipca-outline-loader" class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75 d-none" style="z-index: 10;">
+                        <div id="aipca-outline-loader" class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-90 d-none" style="z-index: 10;">
                             <div class="text-center">
-                                <div class="spinner-border text-primary" role="status"></div>
-                                <p class="mt-2">Regenerating outline...</p>
+                                <div class="aipca-spinner"></div>
+                                <p class="aipca-loader-text">Regenerating outline...</p>
                             </div>
                         </div>
 
@@ -81,20 +91,20 @@ class Content_Generator {
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title"><?php esc_html_e('Generated Full Post', 'ai-powered-content-assistant'); ?></h5>
+                        <h5 class="modal-title">📄 <?php esc_html_e('Generated Full Post', 'ai-powered-content-assistant'); ?></h5>
                         <div class="ms-auto d-flex gap-2">
-                            <button type="button" class="btn btn-full-warning btn-sm" id="aipca-full-remake" title="Remake full post">♻</button>
-                            <button type="button" class="btn btn-full-success btn-sm" id="aipca-full-download" title="Download as DOCX">⬇ .docx</button>
-                            <button type="button" class="btn btn-full-secondary btn-sm" id="aipca-full-copy" title="Copy">📋</button>
-                            <button type="button" class="border btn-close mt-0" data-bs-dismiss="modal" id="aipca-modal-full-close"></button>
+                            <button type="button" class="aipca-modal-btn" id="aipca-full-remake" title="Remake full post">♻ Remake</button>
+                            <button type="button" class="aipca-modal-btn" id="aipca-full-download" title="Download as DOCX">⬇ Download</button>
+                            <button type="button" class="aipca-modal-btn" id="aipca-full-copy" title="Copy">📋 Copy</button>
+                            <button type="button" class="btn-close btn-close-white mt-1 border" data-bs-dismiss="modal" id="aipca-modal-full-close"></button>
                         </div>
                     </div>
 
                     <div class="modal-body position-relative" id="aipca-full-body">
-                        <div id="aipca-full-loader" class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75 d-none" style="z-index: 10;">
+                        <div id="aipca-full-loader" class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white bg-opacity-90 d-none" style="z-index: 10;">
                             <div class="text-center">
-                                <div class="spinner-border text-primary" role="status"></div>
-                                <p class="mt-2">Generating full post...</p>
+                                <div class="aipca-spinner"></div>
+                                <p class="aipca-loader-text">Generating full post...</p>
                             </div>
                         </div>
 
@@ -141,7 +151,7 @@ class Content_Generator {
         // Clean Markdown-style code fences
         $outline = preg_replace( '/^```html|```$/m', '', $outline );
 
-        // Fallback if the outline doesn’t contain expected HTML structure
+        // Fallback if the outline doesn't contain expected HTML structure
         if ( ! preg_match( '/<h[1-6]>/i', $outline ) ) {
             $outline = nl2br( esc_html( $outline ) ); // Escape just in case
             $outline = "<div class='aipca-outline'><h3>Outline</h3>{$outline}</div>";
@@ -226,5 +236,4 @@ class Content_Generator {
         echo '<html><body>' . $html . '</body></html>';
         exit;
     }
-
 }
