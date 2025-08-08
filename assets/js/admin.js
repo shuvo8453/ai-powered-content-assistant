@@ -98,6 +98,7 @@ jQuery(function($) {
             return;
         }
 
+        currentTopic = topic;
         $('#aipca-loader').show();
 
         $.post(AIPCA_Vars.ajax_url, {
@@ -138,6 +139,48 @@ jQuery(function($) {
         $('body').append(form);
         form.submit();
         form.remove();
+    });
+
+    // Remake full post
+    $('#aipca-full-remake').on('click', function () {
+        if (!currentTopic) return;
+
+        // Show overlay loader and disable buttons
+        $('#aipca-full-loader').removeClass('d-none');
+        $('#aipca-full-remake').prop('disabled', true);
+        $('#aipca-full-copy').prop('disabled', true);
+        $('#aipca-modal-full-close').prop('disabled', true);
+
+        $.post(AIPCA_Vars.ajax_url, {
+            action: 'aipca_generate_full_post',
+            security: AIPCA_Vars.nonce,
+            topic: currentTopic
+        }, function (res) {
+            $('#aipca-full-loader').hide();
+
+            $('#aipca-full-remake').prop('disabled', false);
+            $('#aipca-full-copy').prop('disabled', false);
+            $('#aipca-modal-full-close').prop('disabled', false);
+
+            if (res.success) {
+                $('#aipca-full-loader').addClass('d-none');
+                $('#aipca-full-content').html(res.data.content);
+            } else {
+                alert(res.data.message || 'Error regenerating full post.');
+            }
+        }).fail(() => {
+            $('#aipca-full-loader').hide();
+            $('#aipca-full-remake').prop('disabled', false);
+            $('#aipca-full-copy').prop('disabled', false);
+            $('#aipca-modal-full-close').prop('disabled', false);
+            alert('Something went wrong.');
+        });
+    });
+
+    // Copy full post
+    $('#aipca-full-copy').on('click', function() {
+        navigator.clipboard.writeText($('#aipca-full-content').text())
+            .then(() => alert('Full post copied to clipboard!'));
     });
 
 });

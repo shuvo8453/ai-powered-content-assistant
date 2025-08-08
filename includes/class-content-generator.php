@@ -83,7 +83,9 @@ class Content_Generator {
                     <div class="modal-header">
                         <h5 class="modal-title"><?php esc_html_e('Generated Full Post', 'ai-powered-content-assistant'); ?></h5>
                         <div class="ms-auto d-flex gap-2">
-                            <button type="button" class="btn btn-outline-success btn-sm" id="aipca-full-download" title="Download as DOCX">⬇ .docx</button>
+                            <button type="button" class="btn btn-full-warning btn-sm" id="aipca-full-remake" title="Remake full post">♻</button>
+                            <button type="button" class="btn btn-full-success btn-sm" id="aipca-full-download" title="Download as DOCX">⬇ .docx</button>
+                            <button type="button" class="btn btn-full-secondary btn-sm" id="aipca-full-copy" title="Copy">📋</button>
                             <button type="button" class="border btn-close mt-0" data-bs-dismiss="modal" id="aipca-modal-full-close"></button>
                         </div>
                     </div>
