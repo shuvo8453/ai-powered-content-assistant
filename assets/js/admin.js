@@ -2,6 +2,7 @@ jQuery(function($) {
     console.log('admin loaded.');
 
     let currentTopic = '';
+    let outlineConetnt = '';
 
     $('#btn-generate-outline').on('click', function(e) {
         e.preventDefault(); // Stop default form submission
@@ -22,6 +23,7 @@ jQuery(function($) {
         }, function(res) {
             $('#aipca-loader').hide();
             if (res.success) {
+                outlineConetnt = res.data.content;
                 $('#aipca-outline-content').html(res.data.content);
                 $('#aipca-outline-loader').hide(); // 💡 hide modal overlay loader just in case
                 new bootstrap.Modal('#aipcaOutlineModal').show();
@@ -80,8 +82,41 @@ jQuery(function($) {
     });
 
     // Create full post from outline
-    $('#aipca-outline-to-full').on('click', function() {
-        alert('Full post generation from outline will go here.');
+    $('#aipca-outline-to-full').on('click', function(e) {
+        e.preventDefault();
+
+        outline_topic = outlineConetnt;
+        if (!outline_topic) {
+            alert('Something went wrong.');
+            return;
+        }
+
+        $('#aipca-outline-loader').removeClass('d-none');
+        $('#aipca-outline-remake').prop('disabled', true);
+        $('#aipca-outline-to-full').prop('disabled', true);
+        $('#aipca-outline-copy').prop('disabled', true);
+        $('#aipca-modal-remove').prop('disabled', true);
+
+        $.post(AIPCA_Vars.ajax_url, {
+            action: 'aipca_generate_full_post',
+            security: AIPCA_Vars.nonce,
+            topic: outline_topic
+        }, function (res) {
+            $('#aipcaOutlineModal').modal('hide');
+
+            if (res.success) {
+                new bootstrap.Modal('#aipcaFullPostModal').show();
+                $('#aipca-full-content').html(res.data.content);
+                $('#aipca-full-loader').addClass('d-none');
+            } else {
+                $('#aipca-full-content').html(`<div class="alert alert-danger">${res.data.message || 'Error generating post.'}</div>`);
+            }
+        }).fail(() => {
+            $('#aipcaOutlineModal').modal('hide');
+            $('#aipca-outline-loader').addClass('d-none');;
+            $('#aipca-full-content').html('<div class="alert alert-danger">Something went wrong.</div>');
+        });
+        
     });
 
     // remove modal and clear input field
