@@ -110,7 +110,7 @@ jQuery(function($) {
             // $('#aipca-full-loader').addClass('d-none');
 
             if (res.success) {
-                $('#aipcaFullPostModal').modal('show');
+                new bootstrap.Modal('#aipcaFullPostModal').show();
                 $('#aipca-full-content').html(res.data.content);
             } else {
                 $('#aipca-full-content').html(`<div class="alert alert-danger">${res.data.message || 'Error generating post.'}</div>`);
@@ -148,6 +148,7 @@ jQuery(function($) {
         // Show overlay loader and disable buttons
         $('#aipca-full-loader').removeClass('d-none');
         $('#aipca-full-remake').prop('disabled', true);
+        $('#aipca-full-download').prop('disabled', true);
         $('#aipca-full-copy').prop('disabled', true);
         $('#aipca-modal-full-close').prop('disabled', true);
 
@@ -159,6 +160,7 @@ jQuery(function($) {
             $('#aipca-full-loader').hide();
 
             $('#aipca-full-remake').prop('disabled', false);
+            $('#aipca-full-download').prop('disabled', false);
             $('#aipca-full-copy').prop('disabled', false);
             $('#aipca-modal-full-close').prop('disabled', false);
 
@@ -171,6 +173,7 @@ jQuery(function($) {
         }).fail(() => {
             $('#aipca-full-loader').hide();
             $('#aipca-full-remake').prop('disabled', false);
+            $('#aipca-full-download').prop('disabled', false);
             $('#aipca-full-copy').prop('disabled', false);
             $('#aipca-modal-full-close').prop('disabled', false);
             alert('Something went wrong.');
@@ -181,12 +184,6 @@ jQuery(function($) {
     $('#aipca-full-copy').on('click', function() {
         navigator.clipboard.writeText($('#aipca-full-content').text())
             .then(() => alert('Full post copied to clipboard!'));
-    });
-
-    // remove modal and clear input field for full post
-    $('#aipca-modal-remove').on('click', function() {
-        $('#blog_topic').val(''); // clear the input
-        currentTopic = ''; // reset the internal topic too
     });
 
 });

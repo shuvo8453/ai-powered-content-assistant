@@ -35,8 +35,7 @@ class Content_Generator {
                                     id="blog_topic" 
                                     rows="4" 
                                     class="aipca-textarea" 
-                                    placeholder="<?php esc_attr_e( 'Describe your blog topic in detail. The more specific you are, the better content we can generate for you...', 'ai-powered-content-assistant' ); ?>">
-                                </textarea>
+                                    placeholder="<?php esc_attr_e( 'Describe your blog topic in detail. The more specific you are, the better content we can generate for you...', 'ai-powered-content-assistant' ); ?>"></textarea>
                             </div>
 
                             <div class="aipca-button-group">
