@@ -85,7 +85,7 @@ jQuery(function($) {
     });
 
     // remove modal and clear input field
-    $('#aipca-modal-remove').on('click', function() {
+    $('#aipca-modal-remove, #aipca-modal-full-close').on('click', function() {
         $('#blog_topic').val(''); // clear the input
         currentTopic = ''; // reset the internal topic too
     });
@@ -181,6 +181,12 @@ jQuery(function($) {
     $('#aipca-full-copy').on('click', function() {
         navigator.clipboard.writeText($('#aipca-full-content').text())
             .then(() => alert('Full post copied to clipboard!'));
+    });
+
+    // remove modal and clear input field for full post
+    $('#aipca-modal-remove').on('click', function() {
+        $('#blog_topic').val(''); // clear the input
+        currentTopic = ''; // reset the internal topic too
     });
 
 });
