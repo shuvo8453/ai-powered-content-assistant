@@ -221,4 +221,46 @@ jQuery(function($) {
             .then(() => alert('Full post copied to clipboard!'));
     });
 
+    // Save full post as WP draft
+    $('#aipca-full-draft').on('click', function(e) {
+        e.preventDefault();
+        const $btn = $(this);
+        const content = $('#aipca-full-content').html() || '';
+
+        if (!content.trim()) {
+            alert('No content to save.');
+            return;
+        }
+
+        const temp = $('<div>').html(content);
+        
+        let title = temp.find('h1, h2').first().text().trim();
+        if (!title) title = $('#blog_topic').val().trim() || 'AI Generated Post';
+        
+        temp.find('h1, h2').first().remove();
+        const updatedContent = temp.html();
+
+        $btn.prop('disabled', true).text('Saving...');
+
+        $.post(AIPCA_Vars.ajax_url, {
+            action: 'aipca_save_post',
+            security: AIPCA_Vars.nonce,
+            title: title,
+            content: updatedContent
+        }, function(res) {
+            $btn.prop('disabled', false).text('🧾 Save as Draft');
+            if (res.success) {
+                alert('Draft saved. Opening editor...');
+                if (res.data && res.data.edit_link) {
+                    window.open(res.data.edit_link, '_blank');
+                }
+            } else {
+                alert(res.data.message || 'Failed to save draft.');
+            }
+        }).fail(function() {
+            $btn.prop('disabled', false).text('🧾 Save as Draft');
+            alert('AJAX failed.');
+        });
+    });
+
 });

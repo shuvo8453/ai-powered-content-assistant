@@ -10,6 +10,7 @@ class Content_Generator {
         add_action( 'wp_ajax_aipca_generate_outline', [ $this, 'ajax_generate_outline' ] );
         add_action( 'wp_ajax_aipca_generate_full_post', [ $this, 'ajax_generate_full_post' ] );
         add_action( 'wp_ajax_aipca_download_docx', [ $this, 'ajax_download_docx' ] );
+        add_action( 'wp_ajax_aipca_save_post', [ $this, 'ajax_save_post' ] );
     }
 
     public function render_page() {
@@ -95,6 +96,7 @@ class Content_Generator {
                             <button type="button" class="aipca-modal-btn" id="aipca-full-remake" title="Remake full post">♻ Remake</button>
                             <button type="button" class="aipca-modal-btn" id="aipca-full-download" title="Download as DOCX">⬇ Download</button>
                             <button type="button" class="aipca-modal-btn" id="aipca-full-copy" title="Copy">📋 Copy</button>
+                            <button type="button" class="aipca-modal-btn" id="aipca-full-draft" title="Copy">🧾 Save as Draft</button>
                             <button type="button" class="btn-close btn-close-white mt-1 border" data-bs-dismiss="modal" id="aipca-modal-full-close"></button>
                         </div>
                     </div>
@@ -234,5 +236,47 @@ class Content_Generator {
 
         echo '<html><body>' . $html . '</body></html>';
         exit;
+    }
+
+    public function ajax_save_post() {
+        check_ajax_referer( 'aipca_nonce', 'security' );
+
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            wp_send_json_error( [ 'message' => 'You do not have permission to create posts.' ] );
+        }
+
+        $title   = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
+        $content = isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '';
+
+        if ( empty( $content ) ) {
+            wp_send_json_error( [ 'message' => 'Content is empty.' ] );
+        }
+
+        if ( empty( $title ) ) {
+            // strip tags and take first few words
+            $plain = wp_strip_all_tags( $content );
+            $title = wp_trim_words( $plain, 6, '' );
+            if ( empty( $title ) ) {
+                $title = 'AI Generated Post';
+            }
+        }
+
+        $postarr = [
+            'post_title'   => $title,
+            'post_content' => $content,
+            'post_status'  => 'draft',
+            'post_type'    => 'post',
+            'post_author'  => get_current_user_id(),
+        ];
+
+        $post_id = wp_insert_post( $postarr, true );
+
+        if ( is_wp_error( $post_id ) ) {
+            wp_send_json_error( [ 'message' => $post_id->get_error_message() ] );
+        }
+
+        $edit_link = get_edit_post_link( $post_id, '' );
+
+        wp_send_json_success( [ 'post_id' => $post_id, 'edit_link' => $edit_link ] );
     }
 }
