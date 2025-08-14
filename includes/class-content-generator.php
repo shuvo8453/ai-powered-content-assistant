@@ -142,7 +142,7 @@ class Content_Generator {
         - Use <ul><li> for bullet points 
         - Wrap the entire response in <div class='aipca-outline'>";
 
-        $outline = Gemini_API::get_instance()->request( $prompt, 800 );
+        $outline = Gemini_API::get_instance()->request( $prompt, 200 );
 
         // Basic check: if API returned empty or failed
         if ( empty( $outline ) || ! is_string( $outline ) ) {
