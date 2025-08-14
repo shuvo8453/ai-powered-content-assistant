@@ -11,6 +11,10 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 require_once __DIR__ . '/includes/traits/trait-singleton.php';
 
+define( 'AIPCA_PATH', plugin_dir_path( __FILE__ ) );
+define( 'AIPCA_URL', plugin_dir_url( __FILE__ ) );
+define( 'AIPCA_VERSION', '1.0.0' );
+
 // Autoload classes
 spl_autoload_register( function( $class ) {
     $prefix = 'AIPoweredContentAssistant\\';
